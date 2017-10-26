@@ -4,8 +4,8 @@ import requests
 import json
 
 ## SI 206 - HW
-## COMMENT WITH:
-## Your section day/time:
+## COMMENT WITH: Bianca Emde
+## Your section day/time: Thursday 3-4
 ## Any names of people you worked with on this assignment:
 
 
@@ -46,10 +46,10 @@ import json
 ## Get your secret values to authenticate to Twitter. You may replace each of these 
 ## with variables rather than filling in the empty strings if you choose to do the secure way 
 ## for EC points
-consumer_key = "" 
-consumer_secret = ""
-access_token = ""
-access_token_secret = ""
+consumer_key = "twitter_info.consumer_key"
+consumer_secret = "twitter_info.consumer_secret"
+access_token = "twitter_info.access_token"
+access_token_secret = "twitter_info.access_token_secret"
 ## Set up your authentication to Twitter
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
@@ -63,7 +63,14 @@ api = tweepy.API(auth, parser=tweepy.parsers.JSONParser())
 #### Recommended order of tasks: ####
 ## 1. Set up the caching pattern start -- the dictionary and the try/except 
 ## 		statement shown in class.
-
+fname = 'cache_twitter.json'
+try:
+    cache_file = open(fname, 'r') # Read the data
+    cache_contents = cache_file.read()  # Put data into string
+    cache_dict = json.loads(cache_contents) # Load into dictionary
+    cache_file.close() # Close file
+except:
+    cache_dict = {}
 
 
 ## 2. Write a function to get twitter data that works with the caching pattern, 
