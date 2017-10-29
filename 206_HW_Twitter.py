@@ -46,13 +46,17 @@ import json
 ## Get your secret values to authenticate to Twitter. You may replace each of these 
 ## with variables rather than filling in the empty strings if you choose to do the secure way 
 ## for EC points
+
 consumer_key = "twitter_info.consumer_key"
 consumer_secret = "twitter_info.consumer_secret"
 access_token = "twitter_info.access_token"
 access_token_secret = "twitter_info.access_token_secret"
+
 ## Set up your authentication to Twitter
+
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
+
 # Set up library to grab stuff from twitter with your authentication, and 
 # return it in a JSON-formatted way
 
@@ -65,29 +69,48 @@ api = tweepy.API(auth, parser=tweepy.parsers.JSONParser())
 ## 		statement shown in class.
 fname = 'cache_twitter.json'
 try:
-    cache_file = open(fname, 'r') # Read the data
+    cache_file = open(CACHE_FNAME, 'r') # Read the data
     cache_contents = cache_file.read()  # Put data into string
-    cache_dict = json.loads(cache_contents) # Load into dictionary
+    CACHE_DICTIONH = json.loads(cache_contents) # Load into dictionary
     cache_file.close() # Close file
 except:
-    cache_dict = {}
+    CACHE_DICTION = {}
 
 
 ## 2. Write a function to get twitter data that works with the caching pattern, 
 ## 		so it either gets new data or caches data, depending upon what the input 
 ##		to search for is. 
 
+def get_twitter_data(tweet):
+    tweet_key = 'twitter_{}'.format(tweet)
+    if tweet_key in CACHE_DICTION: #if caching
+        print('using cache')
+        return CACHE_DICTION[tweet_key]
+    else:
+        print('fetching') #if fetching
+        tweets = api.search(q=tweet)
+######
+        CACHE_DICTION[twt_key] = tweets 
+        dumps_cache = json.dumps(CACHE_DICTION) #put in JSON format
+        filew = open(CACHE_FNAME,"w")
+        filew.write(dumps_cache)
+        filew.close
+        return tweets
+        print (tweets)
 
 
 ## 3. Using a loop, invoke your function, save the return value in a variable, and explore the 
 ##		data you got back!
 
 
+for a in range(3):
+    tweet = input('Enter Tweet term: ') #enter tweet term
+    data = get_twitter_data(tweet)
+    tweet_info = data['statuses'] #'statuses' containts tweet info
+
 ## 4. With what you learn from the data -- e.g. how exactly to find the 
 ##		text of each tweet in the big nested structure -- write code to print out 
 ## 		content from 5 tweets, as shown in the linked example.
-
-
 
 
 
