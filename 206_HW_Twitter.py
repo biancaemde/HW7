@@ -2,6 +2,7 @@ import unittest
 import tweepy
 import requests
 import json
+import twitter_info
 
 ## SI 206 - HW
 ## COMMENT WITH: Bianca Emde
@@ -47,10 +48,10 @@ import json
 ## with variables rather than filling in the empty strings if you choose to do the secure way 
 ## for EC points
 
-consumer_key = "twitter_info.consumer_key"
-consumer_secret = "twitter_info.consumer_secret"
-access_token = "twitter_info.access_token"
-access_token_secret = "twitter_info.access_token_secret"
+consumer_key = twitter_info.consumer_key
+consumer_secret = twitter_info.consumer_secret
+access_token = twitter_info.access_token
+access_token_secret = twitter_info.access_token_secret
 
 ## Set up your authentication to Twitter
 
@@ -67,11 +68,12 @@ api = tweepy.API(auth, parser=tweepy.parsers.JSONParser())
 #### Recommended order of tasks: ####
 ## 1. Set up the caching pattern start -- the dictionary and the try/except 
 ## 		statement shown in class.
-fname = 'cache_twitter.json'
+CACHE_FNAME = "cache_file.json"
+
 try:
     cache_file = open(CACHE_FNAME, 'r') # Read the data
     cache_contents = cache_file.read()  # Put data into string
-    CACHE_DICTIONH = json.loads(cache_contents) # Load into dictionary
+    CACHE_DICTION = json.loads(cache_contents) # Load into dictionary
     cache_file.close() # Close file
 except:
     CACHE_DICTION = {}
@@ -90,7 +92,7 @@ def get_twitter_data(tweet):
         print('fetching') #if fetching
         tweets = api.search(q=tweet)
 ######
-        CACHE_DICTION[twt_key] = tweets 
+        CACHE_DICTION[tweet_key] = tweets 
         dumps_cache = json.dumps(CACHE_DICTION) #put in JSON format
         filew = open(CACHE_FNAME,"w")
         filew.write(dumps_cache)
@@ -102,16 +104,29 @@ def get_twitter_data(tweet):
 ## 3. Using a loop, invoke your function, save the return value in a variable, and explore the 
 ##		data you got back!
 
+for i in range(3):
+	tweet = input('Enter Tweet term: ') #enter tweet term
+	data = get_twitter_data(tweet)
+	for r in data["statuses"][:5]: #'statuses contains tweet info
+		print("TEXT:",r["text"])
+		print("CREATED AT:",r["created_at"])
+		print("\n")
+print("Made it!")
 
-for a in range(3):
-    tweet = input('Enter Tweet term: ') #enter tweet term
-    data = get_twitter_data(tweet)
-    tweet_info = data['statuses'] #'statuses' containts tweet info
 
 ## 4. With what you learn from the data -- e.g. how exactly to find the 
 ##		text of each tweet in the big nested structure -- write code to print out 
 ## 		content from 5 tweets, as shown in the linked example.
 
+tweet = input('Enter tweet term: ') #enter tweet term
+data = get_twitter_data(tweet)
+i = 0
+for element in data.keys():
+    if (i < 5):
+        print ("TEXT: " + element)
+        print ("CREATED AT: " + data[element])
+        print ("\n")
+        i += 1
 
 
 
